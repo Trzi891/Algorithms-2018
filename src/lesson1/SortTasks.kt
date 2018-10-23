@@ -2,6 +2,8 @@
 
 package lesson1
 
+import java.util.*
+
 /**
  * Сортировка времён
  *
@@ -146,6 +148,16 @@ fun sortSequence(inputName: String, outputName: String) {
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
-    TODO()
+    val list = ArrayList<T>()
+    System.arraycopy(first, 0, second, 0, first.size)
+    for (i in second.indices) {
+        if (second[i] != null) {
+            list.add(second[i]!!)
+        }
+    }
+    for (i in 0 until list.size - 1) {
+        second[i] = list[i]
+    }
+    Arrays.sort(second)
 }
 
