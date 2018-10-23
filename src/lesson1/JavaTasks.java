@@ -174,9 +174,9 @@ public class JavaTasks {
                 list.add(second[i]);
             }
         }
-        Collections.sort(list);
         for (int i = 0; i < list.size() - 1; i++) {
             second[i] = list.get(i);
         }
+        Arrays.sort(second);
     }
 }
