@@ -2,6 +2,8 @@
 
 package lesson1
 
+import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -33,7 +35,20 @@ import java.util.*
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortTimes(inputName: String, outputName: String) {
-    TODO()
+    val format = SimpleDateFormat("HH:mm:ss")
+    val dateList = ArrayList<Date>()
+    if (inputName != null && outputName != null) {
+        val outputStream = File(outputName).bufferedWriter()
+        for (line in File(inputName).readLines()){
+            dateList.add(format.parse(line))
+            dateList.sort()
+        }
+        for (time in dateList) {
+            outputStream.write(format.format(time))
+            outputStream.newLine()
+        }
+        outputStream.close()
+    }
 }
 
 /**
