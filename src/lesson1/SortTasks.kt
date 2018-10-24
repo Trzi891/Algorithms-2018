@@ -39,7 +39,7 @@ fun sortTimes(inputName: String, outputName: String) {
     val dateList = ArrayList<Date>()
     if (inputName != null && outputName != null) {
         val outputStream = File(outputName).bufferedWriter()
-        for (line in File(inputName).readLines()){
+        for (line in File(inputName).readLines()) {
             dateList.add(format.parse(line))
             dateList.sort()
         }
@@ -112,7 +112,17 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val listOfTemperatures = ArrayList<Double>()
+    var outputStream=File(outputName).bufferedWriter()
+    for (i in File(inputName).readLines()){
+        listOfTemperatures.add(i.toDouble())
+    }
+    listOfTemperatures.sort()
+    for (aListOfTemperature in listOfTemperatures) {
+        outputStream.write(java.lang.Double.toString(aListOfTemperature))
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**
