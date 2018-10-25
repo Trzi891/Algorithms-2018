@@ -3,6 +3,7 @@
 package lesson1
 
 import java.io.*
+import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,7 +79,42 @@ fun sortTimes(inputName: String, outputName: String) {
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortAddresses(inputName: String, outputName: String) {
-    TODO()
+    val collator = Collator.getInstance(Locale.US)
+    val addressSet = TreeSet<String>(collator)
+    val addressMap = IdentityHashMap<String, String>()
+    val generalMap = HashMap<String,String>()
+    val listMap = ArrayList<Map<String,String>>()
+   var outputStream= File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()){
+        generalMap.put(line.split(" - ")[1],line.split(" - ")[0])
+        addressSet.add(line.split(" - ")[1])
+        addressMap.put(line.split(" - ")[1],line.split(" - ")[0])
+    }
+    listMap.add(addressMap)
+    for (string in addressSet) {
+        outputStream.write(string + " - " + (mapCombine(listMap)[string] as Iterable<CharSequence>).joinToString(", "))
+        outputStream.newLine()
+    }
+    outputStream.close()
+}
+
+fun mapCombine(list: List<Map<String, String>>): Map<*, *> {
+    val map = HashMap<Any?, SortedSet<String>>()
+    val collator = Collator.getInstance(Locale.US)
+    for (m in list) {
+        val it = m.keys.iterator()
+        while (it.hasNext()) {
+            val key = it.next()
+            if (!map.containsKey(key)) {
+                val nameSet = TreeSet<String>(collator)
+                nameSet.add(m[key]!!)
+                map[key] = nameSet
+            } else {
+                map[key]?.add(m[key])
+            }
+        }
+    }
+    return map
 }
 
 /**
@@ -112,17 +148,7 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    val listOfTemperatures = ArrayList<Double>()
-    var outputStream=File(outputName).bufferedWriter()
-    for (i in File(inputName).readLines()){
-        listOfTemperatures.add(i.toDouble())
-    }
-    listOfTemperatures.sort()
-    for (aListOfTemperature in listOfTemperatures) {
-        outputStream.write(java.lang.Double.toString(aListOfTemperature))
-        outputStream.newLine()
-    }
-    outputStream.close()
+    TODO()
 }
 
 /**

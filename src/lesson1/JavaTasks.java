@@ -3,6 +3,7 @@ package lesson1;
 import kotlin.NotImplementedError;
 
 import java.io.*;
+import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -81,8 +82,45 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortAddresses(String inputName, String outputName) throws IOException {
+        final Collator collator = Collator.getInstance(Locale.US);
+        final SortedSet<String> addressSet = new TreeSet<String>(collator);
+        Map addressMap = new IdentityHashMap<String, String>();
+        Map generalMap = new HashMap();
+        List<Map> listMap = new ArrayList();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputName))) {
+            for (String line; (line = bufferedReader.readLine()) != null; ) {
+                generalMap.put(line.split(" - ")[1], line.split(" - ")[0]);
+                addressSet.add(line.split(" - ")[1]);
+                addressMap.put(line.split(" - ")[1], line.split(" - ")[0]);
+            }
+        }
+        listMap.add(addressMap);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        for (String string : addressSet) {
+            writer.write(string + " - " + String.join(", ", (Iterable<? extends CharSequence>) mapCombine(listMap).get(string)));
+            writer.newLine();
+        }
+        writer.close();
+    }
+
+    public static Map mapCombine(List<Map> list) {
+        Map<Object, SortedSet> map = new HashMap<>();
+        Collator collator = Collator.getInstance(Locale.US);
+        for (Map m : list) {
+            Iterator<Object> it = m.keySet().iterator();
+            while (it.hasNext()) {
+                Object key = it.next();
+                if (!map.containsKey(key)) {
+                    SortedSet nameSet = new TreeSet<String>(collator);
+                    nameSet.add(m.get(key));
+                    map.put(key, nameSet);
+                } else {
+                    map.get(key).add(m.get(key));
+                }
+            }
+        }
+        return map;
     }
 
     /**
@@ -115,7 +153,8 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) throws IOException, IllegalFormatException {
+    static public void sortTemperatures(String inputName, String outputName) {
+
     }
 
     /**
