@@ -82,7 +82,11 @@ public class JavaAlgorithms {
      * Х х Х
      */
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        int result = 0;
+        for (int i = 1; i <= menNumber; i++ ) {
+            result = (result + choiceInterval) % i;
+        }
+        return result + 1;
     }
 
     /**
@@ -111,7 +115,20 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        int count = 0;
+        boolean check = true;
+        for (int i = 2; i <= limit; i++) {
+            for (int j = 2; j < i; j++) {
+                if (i % j == 0) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                count++;
+            } else check = true;
+        }
+        return count;
     }
 
     /**

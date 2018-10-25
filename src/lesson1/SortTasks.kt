@@ -6,6 +6,7 @@ import java.io.*
 import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.timer
 
 /**
  * Сортировка времён
@@ -82,17 +83,17 @@ fun sortAddresses(inputName: String, outputName: String) {
     val collator = Collator.getInstance(Locale.US)
     val addressSet = TreeSet<String>(collator)
     val addressMap = IdentityHashMap<String, String>()
-    val generalMap = HashMap<String,String>()
-    val listMap = ArrayList<Map<String,String>>()
-   var outputStream= File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()){
-        generalMap.put(line.split(" - ")[1],line.split(" - ")[0])
+    val generalMap = HashMap<String, String>()
+    val listMap = ArrayList<Map<String, String>>()
+    val outputStream = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        generalMap[line.split(" - ")[1]] = line.split(" - ")[0]
         addressSet.add(line.split(" - ")[1])
-        addressMap.put(line.split(" - ")[1],line.split(" - ")[0])
+        addressMap[line.split(" - ")[1]] = line.split(" - ")[0]
     }
     listMap.add(addressMap)
     for (string in addressSet) {
-        outputStream.write(string + " - " + (mapCombine(listMap)[string] as Iterable<CharSequence>).joinToString(", "))
+        outputStream.write(string + " - " + (mapCombine(listMap)[string] as Iterable<*>).joinToString(", "))
         outputStream.newLine()
     }
     outputStream.close()
