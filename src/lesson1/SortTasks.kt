@@ -3,10 +3,14 @@
 package lesson1
 
 import java.io.*
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.stream.Collectors
 import kotlin.concurrent.timer
+import kotlin.streams.toList
 
 /**
  * Сортировка времён
@@ -149,7 +153,11 @@ fun mapCombine(list: List<Map<String, String>>): Map<*, *> {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val input = File(inputName).readLines()
+    val buffer =input.stream().map { it.toDouble() }.sorted().toList()
+
+    val output = buffer.stream().map { it.toString() }.toList()
+    Files.write(Paths.get(outputName), output)
 }
 
 /**
@@ -182,7 +190,62 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  */
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    var list = mutableListOf<Int>()
+    for (line in File(inputName).readLines()) {
+        list.add(line.toInt())
+    }
+    val resultNumber = getMax(list)
+    var count = 0
+    for (i in list.indices) {
+        val number=list[i-count]
+        if (i== resultNumber) {
+            list.remove(resultNumber)
+            count++
+        }
+    }
+    run {
+        var i = 0
+        var len = list.size
+        while (i < len) {
+            if (list[i] == resultNumber) {
+                list.removeAt(i)
+                --len//减少一个
+                --i//多谢deny_guoshou指正，如果不加会出现评论1楼所说的情况。
+            }
+            ++i
+        }
+    }
+    for (i in 0 until count) {
+        list.add(resultNumber)
+    }
+    for (number in list) {
+        outputStream.write(number.toString())
+        outputStream.newLine()
+    }
+    outputStream.close()
+}
+
+fun getMax(list: MutableList<Int>): Int {
+    val count = ArrayList<Int>()
+    for (x in list.indices) {
+        var tempCount = 0
+        for (y in list.indices) {
+            if (list[y] === list[x]) {
+                tempCount++
+            }
+        }
+        count.add(x)
+    }
+    var tempMax = count[0]// 找出最大值即谁出现次数最多
+    var maxLocal = 0
+    for (x in 0 until count.size - 1) {
+        if (tempMax < count[x + 1]) {
+            tempMax = count[x + 1]
+            maxLocal = x + 1
+        }
+    }
+    return list[maxLocal]
 }
 
 /**

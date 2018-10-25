@@ -1,6 +1,5 @@
 package lesson1;
 
-import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.text.Collator;
@@ -153,8 +152,7 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-
+    static public void sortTemperatures(String inputName, String outputName) throws IOException{
     }
 
     /**
@@ -186,8 +184,8 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+
     }
 
     /**
