@@ -91,7 +91,7 @@ public class Sorts {
         }
     }
 
-    protected static final Random random = new Random(Calendar.getInstance().getTimeInMillis());
+    private static final Random random = new Random(Calendar.getInstance().getTimeInMillis());
 
     private static int partition(int[] elements, int min, int max) {
         int x = elements[min + random.nextInt(max - min + 1)];

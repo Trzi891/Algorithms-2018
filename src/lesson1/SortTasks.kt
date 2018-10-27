@@ -2,14 +2,12 @@
 
 package lesson1
 
-import java.io.*
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.stream.Collectors
-import kotlin.concurrent.timer
 import kotlin.streams.toList
 
 /**
@@ -43,18 +41,16 @@ import kotlin.streams.toList
 fun sortTimes(inputName: String, outputName: String) {
     val format = SimpleDateFormat("HH:mm:ss")
     val dateList = ArrayList<Date>()
-    if (inputName != null && outputName != null) {
-        val outputStream = File(outputName).bufferedWriter()
-        for (line in File(inputName).readLines()) {
-            dateList.add(format.parse(line))
-            dateList.sort()
-        }
-        for (time in dateList) {
-            outputStream.write(format.format(time))
-            outputStream.newLine()
-        }
-        outputStream.close()
+    val outputStream = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        dateList.add(format.parse(line))
+        dateList.sort()
     }
+    for (time in dateList) {
+        outputStream.write(format.format(time))
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**
@@ -97,7 +93,8 @@ fun sortAddresses(inputName: String, outputName: String) {
     }
     listMap.add(addressMap)
     for (string in addressSet) {
-        outputStream.write(string + " - " + (mapCombine(listMap)[string] as Iterable<*>).joinToString(", "))
+        outputStream.write(string + " - " +
+                (mapCombine(listMap)[string] as Iterable<*>).joinToString(", "))
         outputStream.newLine()
     }
     outputStream.close()
@@ -154,9 +151,9 @@ fun mapCombine(list: List<Map<String, String>>): Map<*, *> {
  */
 fun sortTemperatures(inputName: String, outputName: String) {
     val input = File(inputName).readLines()
-    val buffer =input.stream().map { it.toDouble() }.sorted().toList()
+    val buffer = input.asSequence().map { it.toDouble() }.sorted().toList()
 
-    val output = buffer.stream().map { it.toString() }.toList()
+    val output = buffer.asSequence().map { it.toString() }.toList()
     Files.write(Paths.get(outputName), output)
 }
 
@@ -190,40 +187,7 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  */
 fun sortSequence(inputName: String, outputName: String) {
-    val outputStream = File(outputName).bufferedWriter()
-    var list = mutableListOf<Int>()
-    for (line in File(inputName).readLines()) {
-        list.add(line.toInt())
-    }
-    val resultNumber = getMax(list)
-    var count = 0
-    for (i in list.indices) {
-        val number=list[i-count]
-        if (i== resultNumber) {
-            list.remove(resultNumber)
-            count++
-        }
-    }
-    run {
-        var i = 0
-        var len = list.size
-        while (i < len) {
-            if (list[i] == resultNumber) {
-                list.removeAt(i)
-                --len//减少一个
-                --i//多谢deny_guoshou指正，如果不加会出现评论1楼所说的情况。
-            }
-            ++i
-        }
-    }
-    for (i in 0 until count) {
-        list.add(resultNumber)
-    }
-    for (number in list) {
-        outputStream.write(number.toString())
-        outputStream.newLine()
-    }
-    outputStream.close()
+
 }
 
 fun getMax(list: MutableList<Int>): Int {
@@ -275,4 +239,3 @@ fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
     }
     Arrays.sort(second)
 }
-
