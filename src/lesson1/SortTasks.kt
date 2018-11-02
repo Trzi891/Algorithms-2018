@@ -8,7 +8,6 @@ import java.nio.file.Paths
 import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.streams.toList
 
 /**
  * Сортировка времён
@@ -187,30 +186,41 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  */
 fun sortSequence(inputName: String, outputName: String) {
-
-}
-
-fun getMax(list: MutableList<Int>): Int {
-    val count = ArrayList<Int>()
-    for (x in list.indices) {
-        var tempCount = 0
-        for (y in list.indices) {
-            if (list[y] === list[x]) {
-                tempCount++
-            }
-        }
-        count.add(x)
-    }
-    var tempMax = count[0]// 找出最大值即谁出现次数最多
-    var maxLocal = 0
-    for (x in 0 until count.size - 1) {
-        if (tempMax < count[x + 1]) {
-            tempMax = count[x + 1]
-            maxLocal = x + 1
+    val listOfNumbers = File(inputName).readLines().asSequence().map { it.toInt() }.toMutableList()
+    val numbersAndCounts = HashMap<Int, Int>()
+    for (i in listOfNumbers.indices) {
+        if (numbersAndCounts.containsKey(listOfNumbers[i])) {
+            val temp = numbersAndCounts[listOfNumbers[i]]
+            numbersAndCounts[listOfNumbers[i]] = temp!! + 1
+        } else {
+            numbersAndCounts[listOfNumbers[i]] = 1
         }
     }
-    return list[maxLocal]
+
+    val count = numbersAndCounts.values
+    val hasTheMostRepetitions = ArrayList<Int>()
+    val maxCount = Collections.max(count)
+    for ((key, value) in numbersAndCounts) {
+        if (maxCount == value) {
+            hasTheMostRepetitions.add(key)
+        }
+    }
+    hasTheMostRepetitions.sort()
+
+    val writer = File(outputName).bufferedWriter()
+    for (num in listOfNumbers) {
+        if (num != hasTheMostRepetitions[0]) {
+            writer.write(num.toString())
+            writer.newLine()
+        }
+    }
+    for (i in 0 until maxCount) {
+        writer.write(Integer.toString(hasTheMostRepetitions[0]))
+        writer.newLine()
+    }
+    writer.close()
 }
+
 
 /**
  * Соединить два отсортированных массива в один
