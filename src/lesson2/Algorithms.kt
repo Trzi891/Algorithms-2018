@@ -2,6 +2,11 @@
 
 package lesson2
 
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Collectors
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -27,7 +32,26 @@ package lesson2
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
-    TODO()
+    val listOfNumbers = File(inputName).readLines().asSequence().map { it.toInt() }.toMutableList()
+    val env = intArrayOf(listOfNumbers[0], listOfNumbers[0])
+    var start = 0
+    var end = 0
+    var maxD = 0
+
+    for (i in 1 until listOfNumbers.size) {
+        if (listOfNumbers[i] > env[1]) {
+            env[1] = listOfNumbers[i]
+            if (maxD < env[1] - env[0]) {
+                maxD = env[1] - env[0]
+                start = env[0]
+                end = env[1]
+            }
+        } else if (listOfNumbers[i] < env[0]) {
+            env[0] = listOfNumbers[i]
+            env[1] = listOfNumbers[i]
+        }
+    }
+    return Pair(listOfNumbers.indexOf(start) + 1, listOfNumbers.lastIndexOf(end) + 1)
 }
 
 /**

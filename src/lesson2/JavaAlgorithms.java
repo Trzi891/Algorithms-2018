@@ -3,7 +3,12 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -31,8 +36,27 @@ public class JavaAlgorithms {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        throw new NotImplementedError();
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
+        List<Integer> listOfNumbers = Files.readAllLines(Paths.get(inputName)).stream().map(Integer::parseInt)
+                .collect(Collectors.toList());
+        int[] env = {listOfNumbers.get(0), listOfNumbers.get(0)};
+        int start = 0, end = 0;
+        int maxD = 0;
+
+        for (int i = 1; i < listOfNumbers.size(); i++) {
+            if (listOfNumbers.get(i) > env[1]) {
+                env[1] = listOfNumbers.get(i);
+                if (maxD < env[1] - env[0]) {
+                    maxD = env[1] - env[0];
+                    start = env[0];
+                    end = env[1];
+                }
+            } else if (listOfNumbers.get(i) < env[0]) {
+                env[0] = listOfNumbers.get(i);
+                env[1] = listOfNumbers.get(i);
+            }
+        }
+        return new Pair<>(listOfNumbers.indexOf(start) + 1, listOfNumbers.lastIndexOf(end) + 1);
     }
 
     /**
@@ -100,7 +124,7 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
+    static public String longestCommonSubstring(String first, String second) {
         throw new NotImplementedError();
     }
 
