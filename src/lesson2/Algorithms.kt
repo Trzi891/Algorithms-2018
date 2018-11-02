@@ -111,21 +111,24 @@ fun longestCommonSubstring(first: String, second: String): String {
  */
 fun calcPrimesNumber(limit: Int): Int {
     var count = 0
-    var check = true
-    for (i in 2..limit) {
-        for (j in 2 until i) {
-            if (i % j == 0) {
-                check = false
-                //System.out.println(check);
-                break
-            }
-        }
-        if (check) {
+    if (limit <= 1) return count
+    for (i in 1..limit) {
+        if (isPrime(i))
             count++
-        } else
-            check = true
     }
     return count
+}
+
+internal fun isPrime(num: Int): Boolean {
+    if (num < 2)
+        return false
+    var i = 2
+    while (i * i <= num) {
+        if (num % i == 0)
+            break
+        i++
+    }
+    return i * i > num
 }
 
 /**
