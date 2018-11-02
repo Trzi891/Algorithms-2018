@@ -42,7 +42,21 @@ abstract class AbstractTaskTests : AbstractFileTests() {
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
-        // TODO: large test
+        try {
+            sortAddresses("input/addr_in2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                    Веерная 30 - Сюй Тянь
+                    Воскресенский 7 - Чжан Сан, Чжан Санфэн
+                    Двинская 14 - Ван Дашу
+                    Двинская 4 - Оуян Шангуань
+                    Синельниковская 23 - ЛиСи, Чжао Сяомэй
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+
         try {
             sortAddresses("input/addr_in1.txt", "temp.txt")
             assertFileContent("temp.txt",
@@ -83,6 +97,23 @@ abstract class AbstractTaskTests : AbstractFileTests() {
 
     protected fun sortTemperatures(sortTemperatures: (String, String) -> Unit) {
         try {
+            sortTemperatures("input/temp_in2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                    -56.9
+                    -11.3
+                    -7.0
+                    15.4
+                    19.1
+                    21.6
+                    23.7
+                    31.2
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
             sortTemperatures("input/temp_in1.txt", "temp.txt")
             assertFileContent("temp.txt",
                     """
@@ -117,7 +148,22 @@ abstract class AbstractTaskTests : AbstractFileTests() {
     }
 
     protected fun sortSequence(sortSequence: (String, String) -> Unit) {
-        // TODO: large test
+        try {
+            sortSequence("input/seq_in3.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        11
+                        45
+                        9
+                        8
+                        11
+                        23
+                        23
+                        23
+                    """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
         try {
             sortSequence("input/seq_in1.txt", "temp.txt")
             assertFileContent("temp.txt",

@@ -1,11 +1,18 @@
 package lesson1;
 
+import kotlin.NotImplementedError;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.lang.Float.max;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -39,14 +46,14 @@ public class JavaTasks {
      */
     static public void sortTimes(String inputName, String outputName) throws IOException, ParseException {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        ArrayList<Date> dateList = new ArrayList<Date>();
+        ArrayList<Date> dateList = new ArrayList<>();
         if (inputName != null && outputName != null) {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(inputName));
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
             for (String line; (line = bufferedReader.readLine()) != null; ) {
                 dateList.add(format.parse(line));
-                Collections.sort(dateList);
             }
+            Collections.sort(dateList);
             for (Date time : dateList) {
                 writer.write(format.format(time));
                 writer.newLine();
@@ -82,8 +89,9 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortAddresses(String inputName, String outputName) throws IOException {
-        final Collator collator = Collator.getInstance(Locale.US);
-        final SortedSet<String> addressSet = new TreeSet<String>(collator);
+        final Collator collator = Collator.getInstance(Locale.US);//The Collator class performs locale-sensitive String comparison.
+        // we can use this class to build searching and sorting routines for natural language text
+        final SortedSet<String> addressSet = new TreeSet<>(collator);
         Map addressMap = new IdentityHashMap<String, String>();
         Map generalMap = new HashMap();
         List<Map> listMap = new ArrayList();
@@ -97,7 +105,8 @@ public class JavaTasks {
         listMap.add(addressMap);
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
         for (String string : addressSet) {
-            writer.write(string + " - " + String.join(", ", (Iterable<? extends CharSequence>) mapCombine(listMap).get(string)));
+            writer.write(string + " - " + String.join(", ",
+                    (Iterable<? extends CharSequence>) mapCombine(listMap).get(string)));
             writer.newLine();
         }
         writer.close();
@@ -152,7 +161,12 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) throws IOException{
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        List<Double> input = Files.readAllLines(Paths.get(inputName)).stream()
+                .map(Double::parseDouble).sorted().collect(Collectors.toList());
+
+        List<String> output = input.stream().map(String::valueOf).collect(Collectors.toList());
+        Files.write(Paths.get(outputName), output);
     }
 
     /**
@@ -185,8 +199,42 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
+        List<Integer> listOfNumbers = Files.readAllLines(Paths.get(inputName)).stream()
+                .map(Integer::parseInt).collect(Collectors.toList());
+        HashMap<Integer, Integer> numbersAndCounts = new HashMap<>();
+        for (int i = 0; i < listOfNumbers.size(); i++) {
+            if (numbersAndCounts.containsKey(listOfNumbers.get(i))) {
+                int temp = numbersAndCounts.get(listOfNumbers.get(i));
+                numbersAndCounts.put(listOfNumbers.get(i), temp + 1);
+            } else {
+                numbersAndCounts.put(listOfNumbers.get(i), 1);
+            }
+        }
 
+        Collection<Integer> count = numbersAndCounts.values();
+        List<Integer> hasTheMostRepetitions = new ArrayList<>();
+        int maxCount = Collections.max(count);
+        for (Map.Entry<Integer, Integer> entry : numbersAndCounts.entrySet()) {
+            if (maxCount == entry.getValue()) {
+                hasTheMostRepetitions.add(entry.getKey());
+            }
+        }
+        Collections.sort(hasTheMostRepetitions);
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        for (Integer num : listOfNumbers) {
+            if (!num.equals(hasTheMostRepetitions.get(0))) {
+                writer.write(num.toString());
+                writer.newLine();
+            }
+        }
+        for (int i = 0; i < maxCount; i++) {
+            writer.write(Integer.toString(hasTheMostRepetitions.get(0)));
+            writer.newLine();
+        }
+        writer.close();
     }
+
 
     /**
      * Соединить два отсортированных массива в один
@@ -202,7 +250,6 @@ public class JavaTasks {
      * <p>
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
-
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
         List<T> list = new ArrayList();
         System.arraycopy(first, 0, second, 0, first.length);
