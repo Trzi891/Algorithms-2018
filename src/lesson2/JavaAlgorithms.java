@@ -36,6 +36,8 @@ public class JavaAlgorithms {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+    //Трудоёмкость O(n)
+    //Ресурсоёмкость O(n)
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
         List<Integer> listOfNumbers = Files.readAllLines(Paths.get(inputName)).stream().map(Integer::parseInt)
                 .collect(Collectors.toList());
@@ -105,6 +107,8 @@ public class JavaAlgorithms {
      * Х   Х
      * Х х Х
      */
+    //Трудоёмкость O(n)
+    //Ресурсоёмкость O(n)
     static public int josephTask(int menNumber, int choiceInterval) {
         int result = 0;
         for (int i = 1; i <= menNumber; i++) {
@@ -124,8 +128,28 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
+    //Трудоёмкость O(m*n)
+    //Ресурсоёмкость O(n)
     static public String longestCommonSubstring(String first, String second) {
-        throw new NotImplementedError();
+        int longestLength = 0;
+        String result = "";
+        int[][] matrix = new int[first.length() + 1][second.length() + 1]; // ///不赋值时的初始值为0
+        for (int i = 1; i <= first.length(); i++) {
+            char c1 = first.charAt(i - 1);
+            for (int j = 1; j <= second.length(); j++) {
+                char c2 = second.charAt(j - 1);
+                if (c1 == c2) {
+                    matrix[i][j] = matrix[i - 1][j - 1] + 1;
+                } else {
+                    matrix[i][j] = 0;
+                }
+                if (matrix[i][j] > longestLength) {
+                    longestLength = matrix[i][j];
+                    result = first.substring(i - longestLength , i );
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -138,6 +162,8 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
+    //Трудоёмкость O(n*m)
+    //Ресурсоёмкость O(n)
     static public int calcPrimesNumber(int limit) {
         int count = 0;
         if (limit <= 1) return count;
