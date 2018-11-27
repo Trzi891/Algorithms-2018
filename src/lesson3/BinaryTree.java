@@ -176,12 +176,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return sortedSet;
     }
 
-    public void addValue(SortedSet<T> set, Node<T> node) {
-        set.add(node.value);
-        if (node.left != null) addValue(set, node.left);
-        if (node.right != null) addValue(set, node.right);
-    }
-
     public void checkHead(SortedSet<T> set, T toElement, Node<T> node) {
         int comparison = node.value.compareTo(toElement);
         if (comparison == 0 && node.left != null) addValue(set, node.left);
@@ -191,6 +185,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             if (node.right != null) checkHead(set, toElement, node.right);
             if (node.left != null) addValue(set, node.left);
         }
+    }
+
+    public void addValue(SortedSet<T> set, Node<T> node) {
+        set.add(node.value);
+        if (node.left != null) addValue(set, node.left);
+        if (node.right != null) addValue(set, node.right);
     }
 
     /**

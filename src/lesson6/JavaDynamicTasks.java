@@ -45,14 +45,14 @@ public class JavaDynamicTasks {
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.size() == 0 || list.size() == 1) return list;
         int[] lengths = new int[list.size()];
-        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
-        ArrayList<Integer> tmp = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
         int index = -1, maxIndex = 0, max = Integer.MIN_VALUE;
         lengths[0] = 1;
-        tmp.add(list.get(0));
-        res.add(tmp);
+        temp.add(list.get(0));
+        res.add(temp);
         for (int i = 1; i < list.size(); i++) {
-            tmp = new ArrayList<>();
+            temp = new ArrayList<>();
             for (int j = 0; j < i; j++) {
                 if (list.get(j) < list.get(i) && lengths[j] > lengths[i]) {
                     lengths[i] = lengths[j];
@@ -60,9 +60,9 @@ public class JavaDynamicTasks {
                 }
             }
             ++lengths[i];
-            if (index > -1) tmp.addAll(res.get(index));
-            tmp.add(list.get(i));
-            res.add(tmp);
+            if (index > -1) temp.addAll(res.get(index));
+            temp.add(list.get(i));
+            res.add(temp);
             if (lengths[i] > max) {
                 max = lengths[i];
                 maxIndex = i;
