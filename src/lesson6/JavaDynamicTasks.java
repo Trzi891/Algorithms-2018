@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,32 +45,31 @@ public class JavaDynamicTasks {
     // Ресурсоемкость R = O(n)
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.size() == 0 || list.size() == 1) return list;
-        int[] lengths = new int[list.size()];
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> temp = new ArrayList<>();
-        int index = -1, maxIndex = 0, max = Integer.MIN_VALUE;
-        lengths[0] = 1;
-        temp.add(list.get(0));
-        res.add(temp);
+        int[] lens = new int[list.size()], selectNum = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            lens[i] = 1;
+            selectNum[i] = -1;
+        }
+        int maxIndex = 0;
         for (int i = 1; i < list.size(); i++) {
-            temp = new ArrayList<>();
             for (int j = 0; j < i; j++) {
-                if (list.get(j) < list.get(i) && lengths[j] > lengths[i]) {
-                    lengths[i] = lengths[j];
-                    index = j;
+                if (list.get(j) < list.get(i) && lens[j] + 1 > lens[i]) {
+                    lens[i] = lens[j] + 1;
+                    selectNum[i] = j;
+                    if (lens[maxIndex] < lens[i]) {
+                        maxIndex = i;
+                    }
                 }
             }
-            ++lengths[i];
-            if (index > -1) temp.addAll(res.get(index));
-            temp.add(list.get(i));
-            res.add(temp);
-            if (lengths[i] > max) {
-                max = lengths[i];
-                maxIndex = i;
-            }
         }
-        if (res.get(maxIndex).size() == 1) return res.get(0);
-        return res.get(maxIndex);
+        List<Integer> result = new ArrayList<>();
+        int current = maxIndex;
+        while (current >= 0) {
+            result.add(list.get(current));
+            current = selectNum[current];
+        }
+        Collections.sort(result);
+        return result;
     }
 
     /**
