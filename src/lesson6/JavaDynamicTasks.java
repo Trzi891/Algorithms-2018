@@ -68,7 +68,7 @@ public class JavaDynamicTasks {
             result.add(list.get(current));
             current = selectNum[current];
         }
-        Collections.sort(result);
+        Collections.reverse(result);
         return result;
     }
 
