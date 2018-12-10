@@ -32,7 +32,7 @@ public class JavaGraphTasks {
      * Справка: Эйлеров цикл -- это цикл, проходящий через все рёбра
      * связного графа ровно по одному разу
      */
-    // Трудоемкость T = O(E)
+    // Трудоемкость T = O(E+V)
     // Ресурсоемкость R = O(E)
     public static List<Graph.Edge> findEulerLoop(Graph graph) {
         List<Graph.Edge> result = new LinkedList<>();
@@ -133,7 +133,7 @@ public class JavaGraphTasks {
      * <p>
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
-    //Трудоемкость T = O(V)
+    //Трудоемкость T = O(V*(V+E))
     // Ресурсоемкость R = O(V)
     public static Path longestSimplePath(Graph graph) {
         List<Graph.Vertex> result = new ArrayList<>();
